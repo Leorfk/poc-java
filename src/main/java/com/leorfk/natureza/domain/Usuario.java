@@ -5,12 +5,14 @@ public class Usuario {
     private String nome;
     private String racf;
     private String funcional;
+    private String motivo;
 
-    public Usuario(int id, String nome, String racf, String funcional) {
+    public Usuario(int id, String nome, String racf, String funcional, String motivo) {
         this.id = id;
         this.nome = nome;
         this.racf = racf;
         this.funcional = funcional;
+        this.motivo = motivo;
     }
 
     public Usuario() {
@@ -46,5 +48,13 @@ public class Usuario {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public String getMotivo() {
+        return motivo;
+    }
+
+    public void setMotivo(String motivo) {
+        this.motivo = motivo;
     }
 }

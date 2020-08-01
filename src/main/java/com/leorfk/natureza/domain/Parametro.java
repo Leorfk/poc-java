@@ -9,7 +9,6 @@ public class Parametro {
 
     private int id;
     private Date data;
-    private String motivo;
     private Integer status;
     private String interacao;
 
@@ -18,11 +17,10 @@ public class Parametro {
     private Produto produto;
     private  Recolhimento recolhimento;
 
-    public Parametro(int id, Date data, String motivo, StatusParametro status, Interacao interacao, Usuario usuario,
+    public Parametro(int id, Date data, StatusParametro status, Interacao interacao, Usuario usuario,
                      Natureza natureza, Produto produto, Recolhimento recolhimento) {
         this.id = id;
         this.data = data;
-        this.motivo = motivo;
         this.status = status == null ? null: status.getCodigo();
         this.interacao = interacao == null ? null: interacao.getDescricao();
         this.usuario = usuario;
@@ -45,14 +43,6 @@ public class Parametro {
 
     public void setData(Date data) {
         this.data = data;
-    }
-
-    public String getMotivo() {
-        return motivo;
-    }
-
-    public void setMotivo(String motivo) {
-        this.motivo = motivo;
     }
 
     public StatusParametro getStatus() {
