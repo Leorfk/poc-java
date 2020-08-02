@@ -27,8 +27,8 @@ public class NaturezaService implements INaturezaService {
     }
 
     @Override
-    public Natureza getById(int id) {
-        Natureza natureza = naturezaRepository.getById(id);
+    public Natureza getById(String codigo) {
+        Natureza natureza = naturezaRepository.getById(codigo);
         if (natureza == null){
             throw new ObjectNotFoundException("Natureza não encontrada");
         }

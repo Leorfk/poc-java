@@ -6,26 +6,29 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.net.URI;
 import java.util.List;
 
 @Controller
-@RequestMapping("/natureza")
 public class NaturezaController {
 
     @Autowired
     private INaturezaService naturezaService;
 
     @GetMapping
-    public ResponseEntity<Natureza> getById(@RequestParam Integer id){
-        Natureza natureza = naturezaService.getById(id);
+    public ResponseEntity<Natureza> getById(@RequestParam String codigo){
+        Natureza natureza = naturezaService.getById(codigo);
         return ResponseEntity.ok().body(natureza);
     }
 
     @PostMapping
     public ResponseEntity<Void> create(@RequestBody Natureza natureza){
         naturezaService.add(natureza);
-        return ResponseEntity.noContent().build();
+        URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
+                .path("natureza?codigo={codigo}").buildAndExpand(natureza.getCodigo()).toUri();
+        return ResponseEntity.created(uri).build();
     }
 
     @GetMapping("/list")
