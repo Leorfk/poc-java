@@ -65,7 +65,8 @@ public class ProdutoRepository implements IProdutoRepository {
         String query = select + " WHERE codigo =?";
         try {
             RowMapper<Produto> produtoRowMapper = new ProdutoRowMapper();
-            return this.jdbcTemplate.queryForObject(query, produtoRowMapper, codigo);
+            List<Produto> produto =  this.jdbcTemplate.query(query, produtoRowMapper, codigo);
+            return produto.size() == 1 ? produto.get(0): null;
         }catch (RepositoryException e){
             throw new RepositoryException(e.getMessage());
         }

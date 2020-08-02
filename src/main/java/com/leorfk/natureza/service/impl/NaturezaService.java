@@ -2,6 +2,7 @@ package com.leorfk.natureza.service.impl;
 
 import com.leorfk.natureza.domain.Natureza;
 import com.leorfk.natureza.repository.interfaces.INaturezaRepository;
+import com.leorfk.natureza.service.exception.ObjectNotFoundException;
 import com.leorfk.natureza.service.interfaces.INaturezaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -28,6 +29,9 @@ public class NaturezaService implements INaturezaService {
     @Override
     public Natureza getById(int id) {
         Natureza natureza = naturezaRepository.getById(id);
+        if (natureza == null){
+            throw new ObjectNotFoundException("Natureza não encontrada");
+        }
         return natureza;
     }
 

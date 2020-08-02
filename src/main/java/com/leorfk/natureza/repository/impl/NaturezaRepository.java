@@ -61,7 +61,8 @@ public class NaturezaRepository implements INaturezaRepository {
         String sql = select + " WHERE idnatureza =?";
         try {
             RowMapper<Natureza> rowMapper = new NaturezaRowMapper();
-            return jdbcTemplate.queryForObject(sql, rowMapper, id);
+            List<Natureza> naturezas = jdbcTemplate.query(sql, rowMapper, id);
+            return naturezas.size() == 1 ? naturezas.get(0): null;
         }catch (RepositoryException e){
             throw new RepositoryException(e.getMessage());
         }

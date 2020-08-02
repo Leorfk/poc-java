@@ -2,6 +2,7 @@ package com.leorfk.natureza.service.impl;
 
 import com.leorfk.natureza.domain.Produto;
 import com.leorfk.natureza.repository.interfaces.IProdutoRepository;
+import com.leorfk.natureza.service.exception.ObjectNotFoundException;
 import com.leorfk.natureza.service.interfaces.IProdutoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,7 +27,11 @@ public class ProdutoService implements IProdutoService {
 
     @Override
     public Produto getById(String codigo) {
-        return produtoRepository.buscarPorCodigo(codigo);
+        Produto produto =  produtoRepository.buscarPorCodigo(codigo);
+        if (produto == null){
+            throw new ObjectNotFoundException("Produto com o código: " + codigo + " Não encontrado");
+        }
+        return produto;
     }
 
     @Override

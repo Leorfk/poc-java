@@ -16,8 +16,8 @@ public class NaturezaController {
     @Autowired
     private INaturezaService naturezaService;
 
-    @GetMapping("{id}")
-    public ResponseEntity<Natureza> getById(@PathVariable("id") Integer id){
+    @GetMapping
+    public ResponseEntity<Natureza> getById(@RequestParam Integer id){
         Natureza natureza = naturezaService.getById(id);
         return ResponseEntity.ok().body(natureza);
     }
@@ -28,7 +28,7 @@ public class NaturezaController {
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping
+    @GetMapping("/list")
     public ResponseEntity<List<Natureza>> getAll(){
         List<Natureza> naturezas = naturezaService.getAll();
         return ResponseEntity.ok().body(naturezas);
