@@ -15,7 +15,10 @@ public class Parametro {
     private Usuario usuario;
     private Natureza natureza;
     private Produto produto;
-    private  Recolhimento recolhimento;
+    private Recolhimento recolhimento;
+
+    public Parametro() {
+    }
 
     public Parametro(int id, Date data, StatusParametro status, Interacao interacao, Usuario usuario,
                      Natureza natureza, Produto produto, Recolhimento recolhimento) {
@@ -57,8 +60,8 @@ public class Parametro {
         return interacao;
     }
 
-    public void setInteracao(Interacao interacao) {
-        this.interacao = interacao.getDescricao();
+    public void setInteracao(String interacao) {
+        this.interacao = interacao;
     }
 
     public Usuario getUsuario() {

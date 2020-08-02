@@ -1,0 +1,14 @@
+package com.leorfk.natureza.service.interfaces;
+
+import com.leorfk.natureza.domain.Natureza;
+
+import java.util.List;
+
+public interface INaturezaService {
+
+    List<Natureza> getAll();
+    boolean add(Natureza natureza);
+    Natureza getById(int id);
+    void update(Natureza natureza);
+    void delete(int id);
+}
