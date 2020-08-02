@@ -5,6 +5,7 @@ import com.leorfk.natureza.repository.exception.RepositoryException;
 import com.leorfk.natureza.repository.interfaces.INaturezaRepository;
 import com.leorfk.natureza.repository.utils.NaturezaRowMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -16,8 +17,16 @@ import java.util.List;
 @Repository
 public class NaturezaRepository implements INaturezaRepository {
 
-    private static final String SELECT = "SELECT idnatureza, codigo, descricao FROM natureza";
-    private static final String INSERT = "INSERT INTO natureza (idnatureza, codigo, descricao) value (?, ?, ?)";
+    @Value("${natureza.update}")
+    private String update;
+    @Value("${natureza.insert}")
+    private String insert;
+    @Value("${natureza.select}")
+    private String select;
+    @Value("${natureza.delete}")
+    private String delete;
+
+
     private final JdbcTemplate jdbcTemplate;
     @Autowired
     public NaturezaRepository(JdbcTemplate jdbcTemplate) {
@@ -32,7 +41,7 @@ public class NaturezaRepository implements INaturezaRepository {
         * */
         try {
             RowMapper<Natureza> rowMapper = new NaturezaRowMapper();
-            return this.jdbcTemplate.query(SELECT, rowMapper);
+            return this.jdbcTemplate.query(select, rowMapper);
         }catch (RepositoryException e){
             throw new RepositoryException(e.getMessage());
         }
@@ -41,7 +50,7 @@ public class NaturezaRepository implements INaturezaRepository {
     @Override
     public void add(Natureza natureza){
         try{
-            jdbcTemplate.update(INSERT, null, natureza.getCodigo(), natureza.getDescricao());
+            jdbcTemplate.update(insert, null, natureza.getCodigo(), natureza.getDescricao());
         }catch (RepositoryException e){
             throw new RepositoryException(e.getMessage());
         }
@@ -49,7 +58,7 @@ public class NaturezaRepository implements INaturezaRepository {
 
     @Override
     public Natureza getById(int id){
-        String sql = SELECT + " WHERE idnatureza = ?";
+        String sql = select + " WHERE idnatureza =?";
         try {
             RowMapper<Natureza> rowMapper = new NaturezaRowMapper();
             return jdbcTemplate.queryForObject(sql, rowMapper, id);
@@ -61,8 +70,7 @@ public class NaturezaRepository implements INaturezaRepository {
     @Override
     public void update(Natureza natureza){
         try {
-            String sql = "UPDATE natureza SET codigo=?, descricao=? WHERE idnatureza=?";
-            jdbcTemplate.update(sql, natureza.getCodigo(), natureza.getDescricao(), natureza.getId());
+            jdbcTemplate.update(update, natureza.getCodigo(), natureza.getDescricao(), natureza.getId());
         }catch (RepositoryException e){
             throw new RepositoryException(e.getMessage());
         }
@@ -71,7 +79,7 @@ public class NaturezaRepository implements INaturezaRepository {
     @Override
     public void delete(int id){
         try {
-            String sql = "DELETE FROM natureza WHERE idnatureza=?";
+            String sql = delete + " WHERE idnatureza=?";
             jdbcTemplate.update(sql, id);
         }catch (RepositoryException e){
             throw new RepositoryException(e.getMessage());
