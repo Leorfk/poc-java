@@ -14,13 +14,13 @@ import java.util.List;
 
 @Transactional
 @Repository
-public class NaturezaRespository implements INaturezaRepository {
+public class NaturezaRepository implements INaturezaRepository {
 
     private static final String SELECT = "SELECT idnatureza, codigo, descricao FROM natureza";
     private static final String INSERT = "INSERT INTO natureza (idnatureza, codigo, descricao) value (?, ?, ?)";
     private final JdbcTemplate jdbcTemplate;
     @Autowired
-    public NaturezaRespository(JdbcTemplate jdbcTemplate) {
+    public NaturezaRepository(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
