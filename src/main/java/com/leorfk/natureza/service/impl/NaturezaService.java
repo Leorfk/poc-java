@@ -1,7 +1,7 @@
 package com.leorfk.natureza.service.impl;
 
 import com.leorfk.natureza.domain.Natureza;
-import com.leorfk.natureza.repository.interfaces.INaturezaRepository;
+import com.leorfk.natureza.repository.interfaces.ICrudRepository;
 import com.leorfk.natureza.service.exception.ObjectNotFoundException;
 import com.leorfk.natureza.service.interfaces.INaturezaService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +13,7 @@ import java.util.List;
 public class NaturezaService implements INaturezaService {
 
     @Autowired
-    private INaturezaRepository naturezaRepository;
+    private ICrudRepository<Natureza> naturezaRepository;
 
     @Override
     public List<Natureza> getAll() {
@@ -36,12 +36,12 @@ public class NaturezaService implements INaturezaService {
     }
 
     @Override
-    public void update(Natureza natureza) {
-        naturezaRepository.update(natureza);
+    public void update(String codigo, Natureza natureza) {
+        naturezaRepository.update(codigo, natureza);
     }
 
     @Override
-    public void delete(int id) {
+    public void delete(String id) {
         naturezaRepository.delete(id);
     }
 }

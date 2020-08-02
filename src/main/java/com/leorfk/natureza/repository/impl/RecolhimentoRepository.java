@@ -2,6 +2,7 @@ package com.leorfk.natureza.repository.impl;
 
 import com.leorfk.natureza.domain.Recolhimento;
 import com.leorfk.natureza.repository.exception.RepositoryException;
+import com.leorfk.natureza.repository.interfaces.ICrudRepository;
 import com.leorfk.natureza.repository.interfaces.IRecolhimentoRepository;
 import com.leorfk.natureza.repository.utils.RecolhimentoRowMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +16,7 @@ import java.util.List;
 
 @Transactional
 @Repository
-public class RecolhimentoRepository implements IRecolhimentoRepository {
+public class RecolhimentoRepository implements ICrudRepository<Recolhimento> {
 
     @Value("${recolhimento.update.id}")
     private String update;
@@ -34,7 +35,7 @@ public class RecolhimentoRepository implements IRecolhimentoRepository {
     }
 
     @Override
-    public void salvarRecolhimento(Recolhimento recolhimento) {
+    public void add(Recolhimento recolhimento) {
         try {
             this.jdbcTemplate.update(insert, null, recolhimento.getCodigo(), recolhimento.getDescricao());
         }catch (RepositoryException e){
@@ -43,7 +44,7 @@ public class RecolhimentoRepository implements IRecolhimentoRepository {
     }
 
     @Override
-    public void alterarRecolhimento(String codigo, Recolhimento recolhimento) {
+    public void update(String codigo, Recolhimento recolhimento) {
         String query = update + " WHERE codigo=?";
         try {
             jdbcTemplate.update(query, recolhimento.getCodigo(), recolhimento.getDescricao(), codigo);
@@ -53,7 +54,7 @@ public class RecolhimentoRepository implements IRecolhimentoRepository {
     }
 
     @Override
-    public List<Recolhimento> buscarTodos() {
+    public List<Recolhimento> getAll() {
 
         try {
             RowMapper<Recolhimento> recolhimentoRowMapper = new RecolhimentoRowMapper();
@@ -64,7 +65,7 @@ public class RecolhimentoRepository implements IRecolhimentoRepository {
     }
 
     @Override
-    public Recolhimento buscarPorCodigo(String codigo) {
+    public Recolhimento getById(String codigo) {
         String query = select + " WHERE codigo=?";
         try {
             RowMapper<Recolhimento> recolhimentoRowMapper = new RecolhimentoRowMapper();
@@ -76,7 +77,7 @@ public class RecolhimentoRepository implements IRecolhimentoRepository {
     }
 
     @Override
-    public void apagarRecolhimento(String codigo) {
+    public void delete(String codigo) {
         String query = delete + " WHERE codigo=?";
         try {
             jdbcTemplate.update(query, codigo);

@@ -2,7 +2,7 @@ package com.leorfk.natureza.repository.impl;
 
 import com.leorfk.natureza.domain.Produto;
 import com.leorfk.natureza.repository.exception.RepositoryException;
-import com.leorfk.natureza.repository.interfaces.IProdutoRepository;
+import com.leorfk.natureza.repository.interfaces.ICrudRepository;
 import com.leorfk.natureza.repository.utils.ProdutoRowMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -15,7 +15,7 @@ import java.util.List;
 
 @Transactional
 @Repository
-public class ProdutoRepository implements IProdutoRepository {
+public class ProdutoRepository implements ICrudRepository<Produto> {
 
     @Value("${produto.update.id}")
     private String update;
@@ -33,7 +33,7 @@ public class ProdutoRepository implements IProdutoRepository {
     }
 
     @Override
-    public void salvarProduto(Produto produto) {
+    public void add(Produto produto) {
         try {
             this.jdbcTemplate.update(insert, null, produto.getCodigo(), produto.getDescricao(), produto.getSigla());
         }catch (RepositoryException e){
@@ -42,7 +42,7 @@ public class ProdutoRepository implements IProdutoRepository {
     }
 
     @Override
-    public void alterarProduto(String codigo, Produto produto) {
+    public void update(String codigo, Produto produto) {
         try{
             this.jdbcTemplate.update(update, produto.getCodigo(), produto.getDescricao(), produto.getSigla(), codigo);
         }catch (RepositoryException e){
@@ -51,7 +51,7 @@ public class ProdutoRepository implements IProdutoRepository {
     }
 
     @Override
-    public List<Produto> buscarTodos() {
+    public List<Produto> getAll() {
         try {
             RowMapper<Produto> produtoRowMapper = new ProdutoRowMapper();
             return this.jdbcTemplate.query(select, produtoRowMapper);
@@ -61,7 +61,7 @@ public class ProdutoRepository implements IProdutoRepository {
     }
 
     @Override
-    public Produto buscarPorCodigo(String codigo) {
+    public Produto getById(String codigo) {
         String query = select + " WHERE codigo =?";
         try {
             RowMapper<Produto> produtoRowMapper = new ProdutoRowMapper();
@@ -73,7 +73,7 @@ public class ProdutoRepository implements IProdutoRepository {
     }
 
     @Override
-    public void apagarProduto(String codigo) {
+    public void delete(String codigo) {
         String query = delete + " WHERE codigo=?";
         try {
             this.jdbcTemplate.update(query, codigo);

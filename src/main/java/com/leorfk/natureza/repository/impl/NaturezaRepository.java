@@ -2,6 +2,7 @@ package com.leorfk.natureza.repository.impl;
 
 import com.leorfk.natureza.domain.Natureza;
 import com.leorfk.natureza.repository.exception.RepositoryException;
+import com.leorfk.natureza.repository.interfaces.ICrudRepository;
 import com.leorfk.natureza.repository.interfaces.INaturezaRepository;
 import com.leorfk.natureza.repository.utils.NaturezaRowMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +16,7 @@ import java.util.List;
 
 @Transactional
 @Repository
-public class NaturezaRepository implements INaturezaRepository {
+public class NaturezaRepository implements ICrudRepository<Natureza> {
 
     @Value("${natureza.update.id}")
     private String update;
@@ -69,18 +70,18 @@ public class NaturezaRepository implements INaturezaRepository {
     }
 
     @Override
-    public void update(Natureza natureza){
+    public void update(String codigo, Natureza natureza){
         try {
-            jdbcTemplate.update(update, natureza.getCodigo(), natureza.getDescricao(), natureza.getId());
+            jdbcTemplate.update(update, natureza.getCodigo(), natureza.getDescricao(), codigo);
         }catch (RepositoryException e){
             throw new RepositoryException(e.getMessage());
         }
     }
 
     @Override
-    public void delete(int id){
+    public void delete(String id){
         try {
-            String sql = delete + " WHERE idnatureza=?";
+            String sql = delete + " WHERE codigo=?";
             jdbcTemplate.update(sql, id);
         }catch (RepositoryException e){
             throw new RepositoryException(e.getMessage());

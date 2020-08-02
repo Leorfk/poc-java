@@ -38,15 +38,14 @@ public class NaturezaController {
     }
 
     @PutMapping
-    public ResponseEntity<Void> update(@RequestParam int id, @RequestBody Natureza natureza){
-        natureza.setId(id);
-        naturezaService.update(natureza);
+    public ResponseEntity<Void> update(@RequestParam String codigo, @RequestBody Natureza natureza){
+        naturezaService.update(codigo, natureza);
         return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping
-    public ResponseEntity<Void> delete(@RequestParam int id){
-        naturezaService.delete(id);
+    public ResponseEntity<Void> delete(@RequestParam String codigo){
+        naturezaService.delete(codigo);
         return ResponseEntity.noContent().build();
     }
 }
