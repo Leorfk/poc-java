@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface INaturezaRepository {
     List<Natureza> getAll();
-    boolean add(Natureza natureza);
+    void add(Natureza natureza);
     Natureza getById(int id);
     void update(Natureza natureza);
     void delete(int id);
