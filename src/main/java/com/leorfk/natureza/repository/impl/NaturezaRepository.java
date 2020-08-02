@@ -17,7 +17,7 @@ import java.util.List;
 @Repository
 public class NaturezaRepository implements INaturezaRepository {
 
-    @Value("${natureza.update}")
+    @Value("${natureza.update.id}")
     private String update;
     @Value("${natureza.insert}")
     private String insert;

@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface IProdutoRepository {
     void salvarProduto(Produto produto);
-    void alterarProduto(int id, Produto produto);
+    void alterarProduto(String codigo, Produto produto);
     List<Produto> buscarTodos();
     Produto buscarPorCodigo(String codigo);
     void apagarProduto(String codigo);
