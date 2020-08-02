@@ -4,11 +4,13 @@ public class Produto {
     private int id;
     private String codigo;
     private String descricao;
+    private String sigla;
 
-    public Produto(int id, String codigo, String descricao) {
+    public Produto(int id, String codigo, String descricao, String sigla) {
         this.id = id;
         this.codigo = codigo;
         this.descricao = descricao;
+        this.sigla = sigla;
     }
 
     public Produto() {
@@ -36,5 +38,13 @@ public class Produto {
 
     public void setDescricao(String descricao) {
         this.descricao = descricao;
+    }
+
+    public String getSigla() {
+        return sigla;
+    }
+
+    public void setSigla(String sigla) {
+        this.sigla = sigla;
     }
 }

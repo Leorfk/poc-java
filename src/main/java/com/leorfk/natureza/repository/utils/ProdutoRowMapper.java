@@ -15,6 +15,7 @@ public class ProdutoRowMapper implements RowMapper<Produto> {
         produto.setId(row.getInt("idproduto"));
         produto.setCodigo(row.getString("codigo"));
         produto.setDescricao(row.getString("descricao"));
+        produto.setSigla(row.getString("sigla"));
         return produto;
     }
 }

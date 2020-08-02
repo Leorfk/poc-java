@@ -35,7 +35,7 @@ public class ProdutoRepository implements IProdutoRepository {
     @Override
     public void salvarProduto(Produto produto) {
         try {
-            this.jdbcTemplate.update(insert, null, produto.getCodigo(), produto.getDescricao());
+            this.jdbcTemplate.update(insert, null, produto.getCodigo(), produto.getDescricao(), produto.getSigla());
         }catch (RepositoryException e){
             throw new RepositoryException(e.getMessage());
         }
@@ -44,7 +44,7 @@ public class ProdutoRepository implements IProdutoRepository {
     @Override
     public void alterarProduto(String codigo, Produto produto) {
         try{
-            this.jdbcTemplate.update(update, produto.getCodigo(), produto.getDescricao(), codigo);
+            this.jdbcTemplate.update(update, produto.getCodigo(), produto.getDescricao(), produto.getSigla(), codigo);
         }catch (RepositoryException e){
             throw new RepositoryException(e.getMessage());
         }

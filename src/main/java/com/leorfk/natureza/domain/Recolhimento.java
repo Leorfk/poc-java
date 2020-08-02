@@ -5,13 +5,11 @@ public class Recolhimento {
     private int id;
     private String codigo;
     private String descricao;
-    private String sigla;
 
-    public Recolhimento(int id, String codigo, String descricao, String sigla) {
+    public Recolhimento(int id, String codigo, String descricao) {
         this.id = id;
         this.codigo = codigo;
         this.descricao = descricao;
-        this.sigla = sigla;
     }
 
     public Recolhimento() {
@@ -39,13 +37,5 @@ public class Recolhimento {
 
     public void setDescricao(String descricao) {
         this.descricao = descricao;
-    }
-
-    public String getSigla() {
-        return sigla;
-    }
-
-    public void setSigla(String sigla) {
-        this.sigla = sigla;
     }
 }
