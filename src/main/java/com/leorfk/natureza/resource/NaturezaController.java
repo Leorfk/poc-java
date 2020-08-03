@@ -12,6 +12,7 @@ import java.net.URI;
 import java.util.List;
 
 @Controller
+@RequestMapping("/natureza")
 public class NaturezaController {
 
     @Autowired

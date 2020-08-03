@@ -2,9 +2,13 @@ package com.leorfk.natureza.repository.impl;
 
 import com.leorfk.natureza.domain.Parametro;
 import com.leorfk.natureza.domain.Usuario;
+import com.leorfk.natureza.repository.exception.RepositoryException;
 import com.leorfk.natureza.repository.interfaces.IParametroRepository;
+import com.leorfk.natureza.repository.utils.ParametroRowMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,31 +18,45 @@ import java.util.List;
 @Repository
 public class ParametroRepository implements IParametroRepository {
 
-    private final JdbcTemplate jdbcTemplate;
+    @Value("${parametrizacao.insert}")
+    private String insert;
+    @Value("${parametrizacao.select}")
+    private String select;
 
+    private final JdbcTemplate jdbcTemplate;
     @Autowired
     public ParametroRepository(JdbcTemplate jdbcTemplate){
         this.jdbcTemplate = jdbcTemplate;
     }
 
     @Override
-    public String salvarParametrizacao(Parametro parametro) {
-        return null;
+    public int salvarParametrizacao(Parametro parametro) {
+        try{
+            int resp = this.jdbcTemplate.update(insert, parametro.getId(), parametro.getUsuario().getMotivo(),
+                    parametro.getStatus().getCodigo(), parametro.getInteracao(), parametro.getNatureza().getCodigo(),
+                    parametro.getNatureza().getDescricao(), parametro.getProduto().getCodigo(),
+                    parametro.getProduto().getDescricao(), parametro.getRecolhimento().getCodigo(),
+                    parametro.getRecolhimento().getDescricao(), parametro.getUsuario().getRacf() ,
+                    parametro.getProduto().getSigla());
+            return resp;
+        }catch (RepositoryException e){
+            throw new RepositoryException(e.getMessage());
+        }
     }
 
     @Override
-    public String alterarParametrizacao(int id, Parametro parametro) {
-        return null;
+    public boolean alterarParametrizacao(int id, Parametro parametro) {
+        return false;
     }
 
     @Override
-    public String aprovarParametrizacao(int id, Usuario usuario) {
-        return null;
+    public boolean aprovarParametrizacao(int id, Usuario usuario) {
+        return false;
     }
 
     @Override
-    public String reprovarParametrizacao(int id, Usuario usuario) {
-        return null;
+    public boolean reprovarParametrizacao(int id, Usuario usuario) {
+        return false;
     }
 
     @Override
@@ -48,8 +66,14 @@ public class ParametroRepository implements IParametroRepository {
 
     @Override
     public List<Parametro> buscarTodos() {
-        return null;
+        try {
+            RowMapper<Parametro> parametroRowMapper = new ParametroRowMapper();
+            return this.jdbcTemplate.query(select, parametroRowMapper);
+        }catch (RepositoryException e){
+            throw new RepositoryException(e.getMessage());
+        }
     }
+
     @Override
     public Parametro buscarPorId() {
         return null;

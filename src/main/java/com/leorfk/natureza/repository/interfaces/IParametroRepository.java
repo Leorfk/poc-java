@@ -6,10 +6,10 @@ import com.leorfk.natureza.domain.Usuario;
 import java.util.List;
 
 public interface IParametroRepository {
-    String salvarParametrizacao(Parametro parametro);
-    String alterarParametrizacao(int id, Parametro parametro);
-    String aprovarParametrizacao(int id, Usuario usuario);
-    String reprovarParametrizacao(int id, Usuario usuario);
+    int salvarParametrizacao(Parametro parametro);
+    boolean alterarParametrizacao(int id, Parametro parametro);
+    boolean aprovarParametrizacao(int id, Usuario usuario);
+    boolean reprovarParametrizacao(int id, Usuario usuario);
     Parametro buscarRecentes();
     List<Parametro> buscarTodos();
     Parametro buscarPorId();
