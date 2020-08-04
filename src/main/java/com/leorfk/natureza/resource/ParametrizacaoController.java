@@ -32,4 +32,10 @@ public class ParametrizacaoController {
         List<ParametrizacaoDTO> parametrizacaoDTOS = parametroService.buscarTodos();
         return ResponseEntity.ok().body(parametrizacaoDTOS);
     }
+
+    @GetMapping
+    public ResponseEntity<List<ParametrizacaoDTO>> getById(@RequestParam int id){
+        List<ParametrizacaoDTO> parametrizacaoDTOS = parametroService.buscarHistorico(id);
+        return ResponseEntity.ok().body(parametrizacaoDTOS);
+    }
 }

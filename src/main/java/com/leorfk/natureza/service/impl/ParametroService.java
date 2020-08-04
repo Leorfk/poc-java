@@ -5,6 +5,7 @@ import com.leorfk.natureza.domain.enums.Interacao;
 import com.leorfk.natureza.domain.enums.StatusParametro;
 import com.leorfk.natureza.dto.ParametrizacaoDTO;
 import com.leorfk.natureza.repository.interfaces.IParametroRepository;
+import com.leorfk.natureza.service.exception.ObjectNotFoundException;
 import com.leorfk.natureza.service.interfaces.IParametroService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -47,24 +48,23 @@ public class ParametroService implements IParametroService {
     }
 
     @Override
-    public List<ParametrizacaoDTO> buscarRecentes(int id) {
+    public List<ParametrizacaoDTO> buscarRecentes() {
         return null;
     }
 
     @Override
     public List<ParametrizacaoDTO> buscarTodos() {
-        List<ParametrizacaoDTO> parametrizacaoDTOS = new ArrayList<>();
+
         List<Parametro> parametros = parametroRepository.buscarTodos();
 
-        for (Parametro parametro:parametros) {
-            parametrizacaoDTOS.add(fromDomain(parametro));
-        }
-        return parametrizacaoDTOS;
+        return  popularDTOs(parametros);
     }
 
     @Override
     public List<ParametrizacaoDTO> buscarHistorico(int id) {
-        return null;
+        List<Parametro> parametros = parametroRepository.buscarPorId(id);
+
+        return popularDTOs(parametros);
     }
 
     private Parametro fromDTO(ParametrizacaoDTO objDTO){
@@ -119,5 +119,22 @@ public class ParametroService implements IParametroService {
         parametrizacaoDTO.setDescricaoRecolhimento(parametro.getRecolhimento().getDescricao());
 
         return parametrizacaoDTO;
+    }
+
+    private void validarRetorno(List<Parametro> parametros){
+        if (parametros.size() == 0){
+            throw new ObjectNotFoundException("Nenhum registro encontrado");
+        }
+    }
+
+    private List<ParametrizacaoDTO> popularDTOs(List<Parametro> parametros){
+        List<ParametrizacaoDTO> parametrizacaoDTOS = new ArrayList<>();
+
+        validarRetorno(parametros);
+
+        for (Parametro parametro:parametros) {
+            parametrizacaoDTOS.add(fromDomain(parametro));
+        }
+        return parametrizacaoDTOS;
     }
 }

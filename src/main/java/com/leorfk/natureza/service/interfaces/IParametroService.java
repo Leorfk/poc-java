@@ -11,7 +11,7 @@ public interface IParametroService {
     String alterarParametrizacao(int id, ParametrizacaoDTO objDTO);
     String aprovarParametrizacao(int id, Usuario usuario);
     String reprovarParametrizacao(int id, Usuario usuario);
-    List<ParametrizacaoDTO> buscarRecentes(int id);
+    List<ParametrizacaoDTO> buscarRecentes();
     List<ParametrizacaoDTO> buscarTodos();
     List<ParametrizacaoDTO> buscarHistorico(int id);
 

@@ -12,5 +12,5 @@ public interface IParametroRepository {
     boolean reprovarParametrizacao(int id, Usuario usuario);
     Parametro buscarRecentes();
     List<Parametro> buscarTodos();
-    Parametro buscarPorId();
+    List<Parametro> buscarPorId(int id);
 }

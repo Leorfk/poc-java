@@ -32,7 +32,7 @@ public class ParametroRepository implements IParametroRepository {
     @Override
     public int salvarParametrizacao(Parametro parametro) {
         try{
-            int resp = this.jdbcTemplate.update(insert, parametro.getId(), parametro.getUsuario().getMotivo(),
+            int resp = this.jdbcTemplate.update(insert, parametro.getUsuario().getMotivo(),
                     parametro.getStatus().getCodigo(), parametro.getInteracao(), parametro.getNatureza().getCodigo(),
                     parametro.getNatureza().getDescricao(), parametro.getProduto().getCodigo(),
                     parametro.getProduto().getDescricao(), parametro.getRecolhimento().getCodigo(),
@@ -75,7 +75,13 @@ public class ParametroRepository implements IParametroRepository {
     }
 
     @Override
-    public Parametro buscarPorId() {
-        return null;
+    public List<Parametro> buscarPorId(int id) {
+        String query = select + " WHERE id=?";
+        try {
+            RowMapper<Parametro> parametroRowMapper = new ParametroRowMapper();
+            return this.jdbcTemplate.query(query, parametroRowMapper, id);
+        }catch (RepositoryException e){
+            throw new RepositoryException(e.getMessage());
+        }
     }
 }

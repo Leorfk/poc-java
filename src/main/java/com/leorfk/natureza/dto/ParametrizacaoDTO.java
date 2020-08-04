@@ -1,10 +1,5 @@
 package com.leorfk.natureza.dto;
 
-import com.leorfk.natureza.domain.Natureza;
-import com.leorfk.natureza.domain.Produto;
-import com.leorfk.natureza.domain.Recolhimento;
-import com.leorfk.natureza.domain.Usuario;
-
 import java.util.Date;
 
 public class ParametrizacaoDTO {
