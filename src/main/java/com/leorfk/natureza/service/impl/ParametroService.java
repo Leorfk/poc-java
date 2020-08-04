@@ -5,6 +5,7 @@ import com.leorfk.natureza.domain.enums.Interacao;
 import com.leorfk.natureza.domain.enums.StatusParametro;
 import com.leorfk.natureza.dto.ParametrizacaoDTO;
 import com.leorfk.natureza.repository.interfaces.IParametroRepository;
+import com.leorfk.natureza.service.exception.DataIntegrityException;
 import com.leorfk.natureza.service.exception.ObjectNotFoundException;
 import com.leorfk.natureza.service.interfaces.IParametroService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,38 +23,28 @@ public class ParametroService implements IParametroService {
     private IParametroRepository parametroRepository;
 
     @Override
-    public String salvarParametrizacao(ParametrizacaoDTO objDTO) {
+    public void salvarParametrizacao(ParametrizacaoDTO objDTO) {
         if (!validarParametrizacaoDuplicada(objDTO.getCodigoProduto(), objDTO.getCodigoRecolhimento())){
-            return "Parâmetrização já existente";
+            throw new DataIntegrityException("Parâmetrização já existente");
         }
         Parametro parametro = fromDTO(objDTO);
         parametro.setStatus(StatusParametro.APROVACAO_PENDENTE);
         parametro.setInteracao(Interacao.CADASTRO.getDescricao());
-        if(parametroRepository.salvarParametrizacao(parametro) != 0){
-            return "Parametrização realizada com sucesso";
-        }
-        return "Erro";
     }
 
     @Override
-    public String alterarParametrizacao(int id, ParametrizacaoDTO objDTO) {
+    public void alterarParametrizacao(int id, ParametrizacaoDTO objDTO) {
         Parametro parametro = fromDTO(objDTO);
         parametro.setStatus(StatusParametro.APROVACAO_PENDENTE);
         parametro.setInteracao(Interacao.ALTERACAO.getDescricao());
-        if (parametroRepository.alterarParametrizacao(id, parametro) != 0){
-            return "Parametrização alterada com sucesso";
-        }
-        return "Erro";
     }
 
     @Override
-    public String aprovarParametrizacao(int id, Usuario usuario) {
-        return null;
+    public void aprovarParametrizacao(int id, Usuario usuario) {
     }
 
     @Override
-    public String reprovarParametrizacao(int id, Usuario usuario) {
-        return null;
+    public void reprovarParametrizacao(int id, Usuario usuario) {
     }
 
     @Override
