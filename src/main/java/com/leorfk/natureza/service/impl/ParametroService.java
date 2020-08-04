@@ -23,6 +23,9 @@ public class ParametroService implements IParametroService {
 
     @Override
     public String salvarParametrizacao(ParametrizacaoDTO objDTO) {
+        if (!validarParametrizacaoDuplicada(objDTO.getCodigoProduto(), objDTO.getCodigoRecolhimento())){
+            return "Parâmetrização já existente";
+        }
         Parametro parametro = fromDTO(objDTO);
         parametro.setStatus(StatusParametro.APROVACAO_PENDENTE);
         parametro.setInteracao(Interacao.CADASTRO.getDescricao());
@@ -34,7 +37,13 @@ public class ParametroService implements IParametroService {
 
     @Override
     public String alterarParametrizacao(int id, ParametrizacaoDTO objDTO) {
-        return null;
+        Parametro parametro = fromDTO(objDTO);
+        parametro.setStatus(StatusParametro.APROVACAO_PENDENTE);
+        parametro.setInteracao(Interacao.ALTERACAO.getDescricao());
+        if (parametroRepository.alterarParametrizacao(id, parametro) != 0){
+            return "Parametrização alterada com sucesso";
+        }
+        return "Erro";
     }
 
     @Override
@@ -136,5 +145,14 @@ public class ParametroService implements IParametroService {
             parametrizacaoDTOS.add(fromDomain(parametro));
         }
         return parametrizacaoDTOS;
+    }
+
+    private boolean validarParametrizacaoDuplicada(String codigoProduto, String codigoRecolhimento){
+        Parametro parametro = parametroRepository.buscarProdutoRecolhimento(codigoProduto, codigoRecolhimento);
+        if (parametro != null && parametro.getStatus() == StatusParametro.APROVADO ||
+                parametro.getStatus() == StatusParametro.APROVACAO_PENDENTE){
+            return false;
+        }
+        return true;
     }
 }

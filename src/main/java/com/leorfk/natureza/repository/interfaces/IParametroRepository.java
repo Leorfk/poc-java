@@ -7,10 +7,11 @@ import java.util.List;
 
 public interface IParametroRepository {
     int salvarParametrizacao(Parametro parametro);
-    boolean alterarParametrizacao(int id, Parametro parametro);
-    boolean aprovarParametrizacao(int id, Usuario usuario);
-    boolean reprovarParametrizacao(int id, Usuario usuario);
+    int alterarParametrizacao(int id, Parametro parametro);
+    int aprovarParametrizacao(int id, Usuario usuario);
+    int reprovarParametrizacao(int id, Usuario usuario);
     Parametro buscarRecentes();
     List<Parametro> buscarTodos();
     List<Parametro> buscarPorId(int id);
+    Parametro buscarProdutoRecolhimento(String produto, String recolhimento);
 }

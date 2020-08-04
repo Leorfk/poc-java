@@ -22,6 +22,8 @@ public class ParametroRepository implements IParametroRepository {
     private String insert;
     @Value("${parametrizacao.select}")
     private String select;
+    @Value("${parametrizacao.update}")
+    private String update;
 
     private final JdbcTemplate jdbcTemplate;
     @Autowired
@@ -45,18 +47,25 @@ public class ParametroRepository implements IParametroRepository {
     }
 
     @Override
-    public boolean alterarParametrizacao(int id, Parametro parametro) {
-        return false;
+    public int alterarParametrizacao(int id, Parametro parametro) {
+        try {
+            int resp = this.jdbcTemplate.update(update, parametro.getNatureza().getCodigo(),
+                    parametro.getProduto().getCodigo(), parametro.getRecolhimento().getCodigo(),
+                    parametro.getStatus(), parametro.getUsuario().getRacf(), id);
+            return resp;
+        }catch (RepositoryException e){
+            throw new RepositoryException(e.getMessage());
+        }
     }
 
     @Override
-    public boolean aprovarParametrizacao(int id, Usuario usuario) {
-        return false;
+    public int aprovarParametrizacao(int id, Usuario usuario) {
+        return 0;
     }
 
     @Override
-    public boolean reprovarParametrizacao(int id, Usuario usuario) {
-        return false;
+    public int reprovarParametrizacao(int id, Usuario usuario) {
+        return 0;
     }
 
     @Override
@@ -80,6 +89,18 @@ public class ParametroRepository implements IParametroRepository {
         try {
             RowMapper<Parametro> parametroRowMapper = new ParametroRowMapper();
             return this.jdbcTemplate.query(query, parametroRowMapper, id);
+        }catch (RepositoryException e){
+            throw new RepositoryException(e.getMessage());
+        }
+    }
+
+    @Override
+    public Parametro buscarProdutoRecolhimento(String produto, String recolhimento) {
+        String query = select + " WHERE codigo_produto=? AND codigo_recolhimento=?";
+        try {
+            RowMapper<Parametro> parametroRowMapper = new ParametroRowMapper();
+            List<Parametro> parametros = this.jdbcTemplate.query(query, parametroRowMapper, produto, recolhimento);
+            return parametros.size() >= 1? parametros.get(0): null;
         }catch (RepositoryException e){
             throw new RepositoryException(e.getMessage());
         }

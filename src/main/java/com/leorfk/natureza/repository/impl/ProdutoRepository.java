@@ -66,7 +66,7 @@ public class ProdutoRepository implements ICrudRepository<Produto> {
         try {
             RowMapper<Produto> produtoRowMapper = new ProdutoRowMapper();
             List<Produto> produto =  this.jdbcTemplate.query(query, produtoRowMapper, codigo);
-            return produto.size() == 1 ? produto.get(0): null;
+            return produto.size() >= 1 ? produto.get(0): null;
         }catch (RepositoryException e){
             throw new RepositoryException(e.getMessage());
         }

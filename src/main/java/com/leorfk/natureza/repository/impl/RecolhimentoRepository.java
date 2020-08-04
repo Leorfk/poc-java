@@ -70,7 +70,7 @@ public class RecolhimentoRepository implements ICrudRepository<Recolhimento> {
         try {
             RowMapper<Recolhimento> recolhimentoRowMapper = new RecolhimentoRowMapper();
             List<Recolhimento> recolhimentos = jdbcTemplate.query(query, recolhimentoRowMapper, codigo);
-            return recolhimentos.size() == 1? recolhimentos.get(0): null;
+            return recolhimentos.size() >= 1? recolhimentos.get(0): null;
         }catch (RepositoryException e){
             throw new RepositoryException(e.getMessage());
         }

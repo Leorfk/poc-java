@@ -63,7 +63,7 @@ public class NaturezaRepository implements ICrudRepository<Natureza> {
         try {
             RowMapper<Natureza> rowMapper = new NaturezaRowMapper();
             List<Natureza> naturezas = jdbcTemplate.query(sql, rowMapper, codigo);
-            return naturezas.size() == 1 ? naturezas.get(0): null;
+            return naturezas.size() >= 1 ? naturezas.get(0): null;
         }catch (RepositoryException e){
             throw new RepositoryException(e.getMessage());
         }
