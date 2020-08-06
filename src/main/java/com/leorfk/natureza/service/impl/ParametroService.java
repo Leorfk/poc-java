@@ -11,6 +11,7 @@ import com.leorfk.natureza.service.interfaces.IParametroService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.xml.bind.ValidationException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,8 +36,12 @@ public class ParametroService implements IParametroService {
     @Override
     public void alterarParametrizacao(int id, ParametrizacaoDTO objDTO) {
         Parametro parametro = fromDTO(objDTO);
+        if (!validarParametrizacaoDuplicada(parametro.getProduto().getCodigo(), parametro.getRecolhimento().getCodigo())){
+            throw new DataIntegrityException("Parametrização já existente");
+        }
         parametro.setStatus(StatusParametro.APROVACAO_PENDENTE);
         parametro.setInteracao(Interacao.ALTERACAO.getDescricao());
+        parametroRepository.alterarParametrizacao(id, parametro);
     }
 
     @Override
@@ -139,10 +144,13 @@ public class ParametroService implements IParametroService {
     }
 
     private boolean validarParametrizacaoDuplicada(String codigoProduto, String codigoRecolhimento){
-        Parametro parametro = parametroRepository.buscarProdutoRecolhimento(codigoProduto, codigoRecolhimento);
-        if (parametro != null && parametro.getStatus() == StatusParametro.APROVADO ||
-                parametro.getStatus() == StatusParametro.APROVACAO_PENDENTE){
-            return false;
+        List<Parametro> parametros = parametroRepository.buscarProdutoRecolhimento(codigoProduto, codigoRecolhimento);
+
+        for (Parametro parametro: parametros) {
+            if (parametro != null && parametro.getStatus() == StatusParametro.APROVADO ||
+                    parametro.getStatus() == StatusParametro.APROVACAO_PENDENTE){
+                return false;
+            }
         }
         return true;
     }

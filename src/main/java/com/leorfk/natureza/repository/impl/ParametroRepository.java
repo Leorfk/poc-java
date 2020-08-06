@@ -49,9 +49,9 @@ public class ParametroRepository implements IParametroRepository {
     @Override
     public int alterarParametrizacao(int id, Parametro parametro) {
         try {
-            int resp = this.jdbcTemplate.update(update, parametro.getNatureza().getCodigo(),
+            int resp = this.jdbcTemplate.update(update,id, parametro.getNatureza().getCodigo(),
                     parametro.getProduto().getCodigo(), parametro.getRecolhimento().getCodigo(),
-                    parametro.getStatus(), parametro.getUsuario().getRacf(), id);
+                    parametro.getStatus().getCodigo(), parametro.getUsuario().getRacf());
             return resp;
         }catch (RepositoryException e){
             throw new RepositoryException(e.getMessage());
@@ -95,12 +95,12 @@ public class ParametroRepository implements IParametroRepository {
     }
 
     @Override
-    public Parametro buscarProdutoRecolhimento(String produto, String recolhimento) {
+    public List<Parametro> buscarProdutoRecolhimento(String produto, String recolhimento) {
         String query = select + " WHERE codigo_produto=? AND codigo_recolhimento=?";
         try {
             RowMapper<Parametro> parametroRowMapper = new ParametroRowMapper();
             List<Parametro> parametros = this.jdbcTemplate.query(query, parametroRowMapper, produto, recolhimento);
-            return parametros.size() >= 1? parametros.get(0): null;
+            return parametros.size() >= 1? parametros: null;
         }catch (RepositoryException e){
             throw new RepositoryException(e.getMessage());
         }

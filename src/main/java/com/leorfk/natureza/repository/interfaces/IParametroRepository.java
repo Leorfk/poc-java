@@ -13,5 +13,5 @@ public interface IParametroRepository {
     Parametro buscarRecentes();
     List<Parametro> buscarTodos();
     List<Parametro> buscarPorId(int id);
-    Parametro buscarProdutoRecolhimento(String produto, String recolhimento);
+    List<Parametro> buscarProdutoRecolhimento(String produto, String recolhimento);
 }

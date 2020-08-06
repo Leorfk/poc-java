@@ -27,6 +27,12 @@ public class ParametrizacaoController {
         return ResponseEntity.created(uri).build();
     }
 
+    @PutMapping
+    public ResponseEntity<Void> update(@RequestParam int id, @RequestBody ParametrizacaoDTO objDTO){
+        parametroService.alterarParametrizacao(id, objDTO);
+        return ResponseEntity.noContent().build();
+    }
+
     @GetMapping("/list")
     public ResponseEntity<List<ParametrizacaoDTO>> getAll(){
         List<ParametrizacaoDTO> parametrizacaoDTOS = parametroService.buscarTodos();
