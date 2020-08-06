@@ -23,7 +23,7 @@ public class ParametrizacaoController {
     public ResponseEntity<Void> create(@RequestBody ParametrizacaoDTO objDTO){
         parametroService.salvarParametrizacao(objDTO);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
-                .path("natureza?id={id}").buildAndExpand(objDTO.getId()).toUri();
+                .path("natureza?id={id}").buildAndExpand(objDTO.getCodigoNatureza()).toUri();
         return ResponseEntity.created(uri).build();
     }
 

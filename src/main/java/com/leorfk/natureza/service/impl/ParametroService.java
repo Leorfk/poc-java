@@ -25,20 +25,21 @@ public class ParametroService implements IParametroService {
 
     @Override
     public void salvarParametrizacao(ParametrizacaoDTO objDTO) {
-        if (!validarParametrizacaoDuplicada(objDTO.getCodigoProduto(), objDTO.getCodigoRecolhimento())){
-            throw new DataIntegrityException("Parâmetrização já existente");
-        }
+
+        validarParametrizacaoDuplicada(objDTO.getCodigoProduto(), objDTO.getCodigoRecolhimento());
+
         Parametro parametro = fromDTO(objDTO);
         parametro.setStatus(StatusParametro.APROVACAO_PENDENTE);
         parametro.setInteracao(Interacao.CADASTRO.getDescricao());
+        parametroRepository.salvarParametrizacao(parametro);
     }
 
     @Override
     public void alterarParametrizacao(int id, ParametrizacaoDTO objDTO) {
+
+        validarParametrizacaoDuplicada(objDTO.getCodigoProduto(), objDTO.getCodigoRecolhimento());
+
         Parametro parametro = fromDTO(objDTO);
-        if (!validarParametrizacaoDuplicada(parametro.getProduto().getCodigo(), parametro.getRecolhimento().getCodigo())){
-            throw new DataIntegrityException("Parametrização já existente");
-        }
         parametro.setStatus(StatusParametro.APROVACAO_PENDENTE);
         parametro.setInteracao(Interacao.ALTERACAO.getDescricao());
         parametroRepository.alterarParametrizacao(id, parametro);
@@ -143,15 +144,15 @@ public class ParametroService implements IParametroService {
         return parametrizacaoDTOS;
     }
 
-    private boolean validarParametrizacaoDuplicada(String codigoProduto, String codigoRecolhimento){
+    private void validarParametrizacaoDuplicada(String codigoProduto, String codigoRecolhimento){
         List<Parametro> parametros = parametroRepository.buscarProdutoRecolhimento(codigoProduto, codigoRecolhimento);
-
-        for (Parametro parametro: parametros) {
-            if (parametro != null && parametro.getStatus() == StatusParametro.APROVADO ||
-                    parametro.getStatus() == StatusParametro.APROVACAO_PENDENTE){
-                return false;
+        if (parametros != null){
+            for (Parametro parametro: parametros) {
+                if (parametro.getStatus() == StatusParametro.APROVADO ||
+                        parametro.getStatus() == StatusParametro.APROVACAO_PENDENTE){
+                    throw new DataIntegrityException("Parâmetrização já cadastrada");
+                }
             }
         }
-        return true;
     }
 }
