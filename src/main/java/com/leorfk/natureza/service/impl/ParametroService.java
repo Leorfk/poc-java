@@ -11,7 +11,6 @@ import com.leorfk.natureza.service.interfaces.IParametroService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.xml.bind.ValidationException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,23 +25,25 @@ public class ParametroService implements IParametroService {
     @Override
     public void salvarParametrizacao(ParametrizacaoDTO objDTO) {
 
-        validarParametrizacaoDuplicada(objDTO.getCodigoProduto(), objDTO.getCodigoRecolhimento());
-
-        Parametro parametro = fromDTO(objDTO);
-        parametro.setStatus(StatusParametro.APROVACAO_PENDENTE);
-        parametro.setInteracao(Interacao.CADASTRO.getDescricao());
-        parametroRepository.salvarParametrizacao(parametro);
+        if (parametrizacaoNaoExiste(objDTO.getCodigoProduto(), objDTO.getCodigoRecolhimento())){
+            Parametro parametro = fromDTO(objDTO);
+            parametro.setStatus(StatusParametro.APROVACAO_PENDENTE);
+            parametro.setInteracao(Interacao.CADASTRO.getDescricao());
+            parametroRepository.salvarParametrizacao(parametro);
+        }
+        throw new DataIntegrityException("Parametrização já está cadastrada e ativa");
     }
 
     @Override
     public void alterarParametrizacao(int id, ParametrizacaoDTO objDTO) {
 
-        validarParametrizacaoDuplicada(objDTO.getCodigoProduto(), objDTO.getCodigoRecolhimento());
-
-        Parametro parametro = fromDTO(objDTO);
-        parametro.setStatus(StatusParametro.APROVACAO_PENDENTE);
-        parametro.setInteracao(Interacao.ALTERACAO.getDescricao());
-        parametroRepository.alterarParametrizacao(id, parametro);
+        if (parametrizacaoNaoExiste(objDTO.getCodigoProduto(), objDTO.getCodigoRecolhimento())){
+            Parametro parametro = fromDTO(objDTO);
+            parametro.setStatus(StatusParametro.APROVACAO_PENDENTE);
+            parametro.setInteracao(Interacao.ALTERACAO.getDescricao());
+            parametroRepository.alterarParametrizacao(id, parametro);
+        }
+        throw new DataIntegrityException("Parametrização já está cadastrada e ativa");
     }
 
     @Override
@@ -62,15 +63,19 @@ public class ParametroService implements IParametroService {
     public List<ParametrizacaoDTO> buscarTodos() {
 
         List<Parametro> parametros = parametroRepository.buscarTodos();
-
-        return  popularDTOs(parametros);
+        if (listaTemItens(parametros)){
+            return  popularDTOs(parametros);
+        }
+        throw new ObjectNotFoundException("Nenhum registro encontrado");
     }
 
     @Override
     public List<ParametrizacaoDTO> buscarHistorico(int id) {
         List<Parametro> parametros = parametroRepository.buscarPorId(id);
-
-        return popularDTOs(parametros);
+        if (listaTemItens(parametros)){
+            return popularDTOs(parametros);
+        }
+        throw new ObjectNotFoundException("Nenhum registro de histórico encontrado");
     }
 
     private Parametro fromDTO(ParametrizacaoDTO objDTO){
@@ -127,16 +132,15 @@ public class ParametroService implements IParametroService {
         return parametrizacaoDTO;
     }
 
-    private void validarRetorno(List<Parametro> parametros){
-        if (parametros.size() == 0){
-            throw new ObjectNotFoundException("Nenhum registro encontrado");
+    private boolean listaTemItens(List<Parametro> parametros){
+        if (parametros == null || parametros.size() == 0){
+            return false;
         }
+        return true;
     }
 
     private List<ParametrizacaoDTO> popularDTOs(List<Parametro> parametros){
         List<ParametrizacaoDTO> parametrizacaoDTOS = new ArrayList<>();
-
-        validarRetorno(parametros);
 
         for (Parametro parametro:parametros) {
             parametrizacaoDTOS.add(fromDomain(parametro));
@@ -144,15 +148,16 @@ public class ParametroService implements IParametroService {
         return parametrizacaoDTOS;
     }
 
-    private void validarParametrizacaoDuplicada(String codigoProduto, String codigoRecolhimento){
+    private boolean parametrizacaoNaoExiste(String codigoProduto, String codigoRecolhimento){
         List<Parametro> parametros = parametroRepository.buscarProdutoRecolhimento(codigoProduto, codigoRecolhimento);
         if (parametros != null){
             for (Parametro parametro: parametros) {
                 if (parametro.getStatus() == StatusParametro.APROVADO ||
                         parametro.getStatus() == StatusParametro.APROVACAO_PENDENTE){
-                    throw new DataIntegrityException("Parâmetrização já cadastrada");
+                    return false;
                 }
             }
         }
+        return true;
     }
 }
