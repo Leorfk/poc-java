@@ -1,4 +1,4 @@
-package com.leorfk.natureza.repository.utils;
+package com.leorfk.natureza.repository.mapper;
 
 import com.leorfk.natureza.domain.Recolhimento;
 import org.springframework.jdbc.core.RowMapper;

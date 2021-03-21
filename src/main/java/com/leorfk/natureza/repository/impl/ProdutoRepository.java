@@ -3,7 +3,7 @@ package com.leorfk.natureza.repository.impl;
 import com.leorfk.natureza.domain.Produto;
 import com.leorfk.natureza.repository.exception.RepositoryException;
 import com.leorfk.natureza.repository.interfaces.ICrudRepository;
-import com.leorfk.natureza.repository.utils.ProdutoRowMapper;
+import com.leorfk.natureza.repository.mapper.ProdutoRowMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jdbc.core.JdbcTemplate;

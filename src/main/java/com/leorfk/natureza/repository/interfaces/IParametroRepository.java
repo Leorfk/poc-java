@@ -2,11 +2,12 @@ package com.leorfk.natureza.repository.interfaces;
 
 import com.leorfk.natureza.domain.Parametro;
 import com.leorfk.natureza.domain.Usuario;
+import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.util.List;
 
 public interface IParametroRepository {
-    int salvarParametrizacao(Parametro parametro);
+    void salvarParametrizacao(Parametro parametro);
     int alterarParametrizacao(int id, Parametro parametro);
     int aprovarParametrizacao(int id, Usuario usuario);
     int reprovarParametrizacao(int id, Usuario usuario);

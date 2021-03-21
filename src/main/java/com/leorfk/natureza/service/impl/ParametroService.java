@@ -25,25 +25,23 @@ public class ParametroService implements IParametroService {
     @Override
     public void salvarParametrizacao(ParametrizacaoDTO objDTO) {
 
-        if (parametrizacaoNaoExiste(objDTO.getCodigoProduto(), objDTO.getCodigoRecolhimento())){
-            Parametro parametro = fromDTO(objDTO);
-            parametro.setStatus(StatusParametro.APROVACAO_PENDENTE);
-            parametro.setInteracao(Interacao.CADASTRO.getDescricao());
-            parametroRepository.salvarParametrizacao(parametro);
-        }
-        throw new DataIntegrityException("Parametrização já está cadastrada e ativa");
+        parametrizacaoNaoExiste(objDTO.getCodigoProduto(), objDTO.getCodigoRecolhimento());
+
+        Parametro parametro = fromDTO(objDTO);
+        parametro.setStatus(StatusParametro.APROVACAO_PENDENTE);
+        parametro.setInteracao(Interacao.CADASTRO.getDescricao());
+        parametroRepository.salvarParametrizacao(parametro);
     }
 
     @Override
     public void alterarParametrizacao(int id, ParametrizacaoDTO objDTO) {
 
-        if (parametrizacaoNaoExiste(objDTO.getCodigoProduto(), objDTO.getCodigoRecolhimento())){
-            Parametro parametro = fromDTO(objDTO);
-            parametro.setStatus(StatusParametro.APROVACAO_PENDENTE);
-            parametro.setInteracao(Interacao.ALTERACAO.getDescricao());
-            parametroRepository.alterarParametrizacao(id, parametro);
-        }
-        throw new DataIntegrityException("Parametrização já está cadastrada e ativa");
+        parametrizacaoNaoExiste(objDTO.getCodigoProduto(), objDTO.getCodigoRecolhimento());
+
+        Parametro parametro = fromDTO(objDTO);
+        parametro.setStatus(StatusParametro.APROVACAO_PENDENTE);
+        parametro.setInteracao(Interacao.ALTERACAO.getDescricao());
+        parametroRepository.alterarParametrizacao(id, parametro);
     }
 
     @Override
@@ -61,24 +59,19 @@ public class ParametroService implements IParametroService {
 
     @Override
     public List<ParametrizacaoDTO> buscarTodos() {
-
         List<Parametro> parametros = parametroRepository.buscarTodos();
-        if (listaTemItens(parametros)){
-            return  popularDTOs(parametros);
-        }
-        throw new ObjectNotFoundException("Nenhum registro encontrado");
+        listaTemItens(parametros);
+        return  popularDTOs(parametros);
     }
 
     @Override
     public List<ParametrizacaoDTO> buscarHistorico(int id) {
         List<Parametro> parametros = parametroRepository.buscarPorId(id);
-        if (listaTemItens(parametros)){
-            return popularDTOs(parametros);
-        }
-        throw new ObjectNotFoundException("Nenhum registro de histórico encontrado");
+        listaTemItens(parametros);
+        return popularDTOs(parametros);
     }
 
-    private Parametro fromDTO(ParametrizacaoDTO objDTO){
+    public Parametro fromDTO(ParametrizacaoDTO objDTO){
         Parametro parametro = new Parametro();
         Natureza natureza = new Natureza();
         Recolhimento recolhimento = new Recolhimento();
@@ -109,7 +102,7 @@ public class ParametroService implements IParametroService {
         return parametro;
     }
 
-    private ParametrizacaoDTO fromDomain(Parametro parametro){
+    public ParametrizacaoDTO fromDomain(Parametro parametro){
         ParametrizacaoDTO parametrizacaoDTO = new ParametrizacaoDTO();
         parametrizacaoDTO.setId(parametro.getId());
         parametrizacaoDTO.setData(parametro.getData());
@@ -132,14 +125,13 @@ public class ParametroService implements IParametroService {
         return parametrizacaoDTO;
     }
 
-    private boolean listaTemItens(List<Parametro> parametros){
+    public void listaTemItens(List<Parametro> parametros){
         if (parametros == null || parametros.size() == 0){
-            return false;
+            throw new ObjectNotFoundException("Nenhum registro encontrado");
         }
-        return true;
     }
 
-    private List<ParametrizacaoDTO> popularDTOs(List<Parametro> parametros){
+    public List<ParametrizacaoDTO> popularDTOs(List<Parametro> parametros){
         List<ParametrizacaoDTO> parametrizacaoDTOS = new ArrayList<>();
 
         for (Parametro parametro:parametros) {
@@ -148,16 +140,15 @@ public class ParametroService implements IParametroService {
         return parametrizacaoDTOS;
     }
 
-    private boolean parametrizacaoNaoExiste(String codigoProduto, String codigoRecolhimento){
+    public void parametrizacaoNaoExiste(String codigoProduto, String codigoRecolhimento){
         List<Parametro> parametros = parametroRepository.buscarProdutoRecolhimento(codigoProduto, codigoRecolhimento);
-        if (parametros != null){
+        if (parametros != null || parametros.size() > 0){
             for (Parametro parametro: parametros) {
                 if (parametro.getStatus() == StatusParametro.APROVADO ||
                         parametro.getStatus() == StatusParametro.APROVACAO_PENDENTE){
-                    return false;
+                    throw new DataIntegrityException("Parametrização já está cadastrada e ativa");
                 }
             }
         }
-        return true;
     }
 }

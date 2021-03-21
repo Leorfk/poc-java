@@ -2,7 +2,6 @@ package com.leorfk.natureza.service.impl;
 
 import com.leorfk.natureza.domain.Produto;
 import com.leorfk.natureza.repository.interfaces.ICrudRepository;
-import com.leorfk.natureza.repository.interfaces.IProdutoRepository;
 import com.leorfk.natureza.service.exception.ObjectNotFoundException;
 import com.leorfk.natureza.service.interfaces.IProdutoService;
 import org.springframework.beans.factory.annotation.Autowired;

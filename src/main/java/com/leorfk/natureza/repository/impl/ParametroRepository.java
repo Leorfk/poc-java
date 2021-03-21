@@ -4,7 +4,7 @@ import com.leorfk.natureza.domain.Parametro;
 import com.leorfk.natureza.domain.Usuario;
 import com.leorfk.natureza.repository.exception.RepositoryException;
 import com.leorfk.natureza.repository.interfaces.IParametroRepository;
-import com.leorfk.natureza.repository.utils.ParametroRowMapper;
+import com.leorfk.natureza.repository.mapper.ParametroRowMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -32,15 +32,14 @@ public class ParametroRepository implements IParametroRepository {
     }
 
     @Override
-    public int salvarParametrizacao(Parametro parametro) {
+    public void salvarParametrizacao(Parametro parametro) {
         try{
-            int resp = this.jdbcTemplate.update(insert, parametro.getUsuario().getMotivo(),
+                this.jdbcTemplate.update(insert, parametro.getUsuario().getMotivo(),
                     parametro.getStatus().getCodigo(), parametro.getInteracao(), parametro.getNatureza().getCodigo(),
                     parametro.getNatureza().getDescricao(), parametro.getProduto().getCodigo(),
                     parametro.getProduto().getDescricao(), parametro.getRecolhimento().getCodigo(),
                     parametro.getRecolhimento().getDescricao(), parametro.getUsuario().getRacf() ,
                     parametro.getProduto().getSigla());
-            return resp;
         }catch (RepositoryException e){
             throw new RepositoryException(e.getMessage());
         }
@@ -100,7 +99,7 @@ public class ParametroRepository implements IParametroRepository {
         try {
             RowMapper<Parametro> parametroRowMapper = new ParametroRowMapper();
             List<Parametro> parametros = this.jdbcTemplate.query(query, parametroRowMapper, produto, recolhimento);
-            return parametros.size() >= 1? parametros: null;
+            return parametros.size() > 0? parametros: null;
         }catch (RepositoryException e){
             throw new RepositoryException(e.getMessage());
         }

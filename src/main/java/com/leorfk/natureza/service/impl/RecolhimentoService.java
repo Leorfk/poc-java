@@ -2,7 +2,6 @@ package com.leorfk.natureza.service.impl;
 
 import com.leorfk.natureza.domain.Recolhimento;
 import com.leorfk.natureza.repository.interfaces.ICrudRepository;
-import com.leorfk.natureza.repository.interfaces.IRecolhimentoRepository;
 import com.leorfk.natureza.service.exception.ObjectNotFoundException;
 import com.leorfk.natureza.service.interfaces.IRecolhimentoService;
 import org.springframework.beans.factory.annotation.Autowired;

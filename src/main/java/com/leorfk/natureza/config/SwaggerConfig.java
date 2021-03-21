@@ -23,11 +23,11 @@ public class SwaggerConfig {
     public Docket api() {
         return new Docket(DocumentationType.SWAGGER_2)
                 .select()
-                .apis(RequestHandlerSelectors.any())
+                .apis(RequestHandlerSelectors.basePackage("com.leorfk.natureza"))
                 .paths(PathSelectors.any())
-                .build();
-//                .useDefaultResponseMessages(false)
-//                .globalResponseMessage(RequestMethod.GET, responseMessageForGET());
+                .build()
+                .useDefaultResponseMessages(false)
+                .globalResponseMessage(RequestMethod.GET, responseMessageForGET());
     }
 
     private List<ResponseMessage> responseMessageForGET()
