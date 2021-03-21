@@ -9,7 +9,7 @@ public interface IViewPofService {
 
     ViewPofDTO cadastrarViewPof(ViewPofDTO viewPofDTO);
     ViewPofDTO atualizarViewPof(Integer id, ViewPofDTO viewPofDTO);
-    ViewPofDTO deletarViewPof(Integer id);
-    ViewPofDTO buscarPorIdViewPof(Integer id);
+    void deletarViewPof(Integer id);
+     ViewPofDTO buscarViewPofPorId(Integer id);
     List<ViewPofDTO> listarTodasViewPof();
 }
